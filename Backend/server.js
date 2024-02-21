@@ -1,57 +1,81 @@
-// backend/server.js
+// app.js
 
-import express from 'express';
-import bodyParser from 'body-parser';
-import { Pool } from 'pg';
-
+const express = require('express');
 const app = express();
-const port = 5000;
+const cors = require('cors');
+const { Pool } = require('pg');
 
-app.use(bodyParser.json());
+// Middleware
+app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
+// PostgreSQL pool configuration
 const pool = new Pool({
-  user: 'rubben',
-  host: 'localhost',
-  database: 'library',
-  password: '1234',
-  port: 5432,
+    user: 'postgres',
+    host: 'localhost',
+    database: 'test1', // Updated to the 'test1' database
+    password: '1234',
+    port: 5432,
 });
 
-// GET all borrowed books
-app.get('/api/borrowed_books', async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM borrowed_books');
-    res.json(rows);
-  } catch (error) {
-    console.error('Error fetching borrowed books:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+// Database initialization script
+function createLibraryTable() {
+    pool.query(`CREATE TABLE IF NOT EXISTS library (
+        id SERIAL PRIMARY KEY,
+        borrower VARCHAR(255) NOT NULL,
+        book_title VARCHAR(255) NOT NULL
+    )`, (err, res) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('Table created successfully');
+        }
+    });
+}
+
+// Routes for adding and deleting books
+
+// Add a book to the library
+app.post('/books', (req, res) => {
+    const { borrower, book_title } = req.body;
+
+    pool.query('INSERT INTO library (borrower, book_title) VALUES ($1, $2) RETURNING *', [borrower, book_title], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Failed to add book to the library' });
+        } else {
+            res.status(201).json({ message: 'Book added successfully', book: result.rows[0] });
+        }
+    });
 });
 
-// POST a borrowed book
-app.post('/api/borrowed_books', async (req, res) => {
-  const { person_name, book_title } = req.body;
-  try {
-    await pool.query('INSERT INTO borrowed_books (person_name, book_title) VALUES ($1, $2)', [person_name, book_title]);
-    res.status(201).json({ message: 'Book borrowed successfully' });
-  } catch (error) {
-    console.error('Error borrowing book:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-});
+// Delete a book from the library
+app.delete('/books/:id', (req, res) => {
+  const bookId = req.params.id;
 
-// DELETE a borrowed book
-app.delete('/api/borrowed_books/:id', async (req, res) => {
-  const id = req.params.id;
-  try {
-    await pool.query('DELETE FROM borrowed_books WHERE id = $1', [id]);
-    res.json({ message: 'Book deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting book:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+  pool.query('DELETE FROM library WHERE id = $1', [bookId], (err) => {
+      if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Failed to delete book from the library' });
+      } else {
+          res.status(200).json({ message: 'Book deleted successfully' });
+      }
+  });
 });
+// Add route to get all books
+app.get('/books', (req, res) => {
+  pool.query('SELECT * FROM library', (err, result) => {
+      if (err) {
+          console.error(err);
+          res.status(500).json({ message: 'Failed to fetch books' });
+      } else {
+          res.status(200).json(result.rows);
+      }
+  });
+});
+// Create library table and start the Express server
+createLibraryTable();
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(3001, () => {
+    console.log('Server running on port 3001');
 });
