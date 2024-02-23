@@ -1,4 +1,3 @@
-// app.js
 
 const express = require('express');
 const app = express();
@@ -24,7 +23,8 @@ function createLibraryTable() {
         id SERIAL PRIMARY KEY,
         borrower VARCHAR(255) NOT NULL,
         mobile_number VARCHAR(255) NOT NULL,
-        book_title VARCHAR(255) NOT NULL
+        book_title VARCHAR(255) NOT NULL,
+        due_date DATE NOT NULL
     )`, (err, res) => {
         if (err) {
             console.error(err);
@@ -38,9 +38,9 @@ function createLibraryTable() {
 
 // Add a book to the library
 app.post('/books', (req, res) => {
-    const { borrower, book_title, mobile_number } = req.body;
+    const { borrower, book_title, mobile_number, due_date } = req.body;
 
-    pool.query('INSERT INTO library (borrower, book_title, mobile_number) VALUES ($1, $2, $3) RETURNING *', [borrower, book_title, mobile_number], (err, result) => {
+    pool.query('INSERT INTO library (borrower, book_title, mobile_number, due_date) VALUES ($1, $2, $3, $4) RETURNING *', [borrower, book_title, mobile_number, due_date], (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).json({ message: 'Failed to add book to the library' });
@@ -63,6 +63,7 @@ app.delete('/books/:id', (req, res) => {
       }
   });
 });
+
 // Add route to get all books
 app.get('/books', (req, res) => {
   pool.query('SELECT * FROM library', (err, result) => {
@@ -74,6 +75,7 @@ app.get('/books', (req, res) => {
       }
   });
 });
+
 // Create library table and start the Express server
 createLibraryTable();
 
