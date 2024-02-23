@@ -1,0 +1,80 @@
+.homepage-container {
+  max-width: 100dvw;
+  margin: 0 auto;
+  padding: 20px;
+  background-image: url('https://miro.medium.com/v2/resize:fit:1100/format:webp/1*6Jp3vJWe7VFlFHZ9WhSJng.jpeg');
+  background-position: center;
+  background-repeat: repeat;
+  min-height: 100vh;
+}
+
+.library-container {
+  margin: 20px;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  height: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #531227;
+}
+
+.add-book-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.return-book-section {
+  margin-bottom: 20px;
+}
+
+.borrowed-books-section {
+  border-top: 1px solid #4f2222;
+  padding-top: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+button {
+  margin-left: 10px;
+}
+
+input {
+  border-radius: 5px;
+  padding: 8px;
+  border: 2px solid #4f2222;
+  margin-bottom: 10px;
+}
+
+.book-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.book-card {
+  flex: 1 1 calc(25.33% - 20px);
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #B4B4B8;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+h2{
+  color: #4f2222;
+}

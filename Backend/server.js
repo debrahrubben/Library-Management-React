@@ -23,6 +23,7 @@ function createLibraryTable() {
     pool.query(`CREATE TABLE IF NOT EXISTS library (
         id SERIAL PRIMARY KEY,
         borrower VARCHAR(255) NOT NULL,
+        mobile_number VARCHAR(255) NOT NULL,
         book_title VARCHAR(255) NOT NULL
     )`, (err, res) => {
         if (err) {
@@ -37,9 +38,9 @@ function createLibraryTable() {
 
 // Add a book to the library
 app.post('/books', (req, res) => {
-    const { borrower, book_title } = req.body;
+    const { borrower, book_title, mobile_number } = req.body;
 
-    pool.query('INSERT INTO library (borrower, book_title) VALUES ($1, $2) RETURNING *', [borrower, book_title], (err, result) => {
+    pool.query('INSERT INTO library (borrower, book_title, mobile_number) VALUES ($1, $2, $3) RETURNING *', [borrower, book_title, mobile_number], (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).json({ message: 'Failed to add book to the library' });
