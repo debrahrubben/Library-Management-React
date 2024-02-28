@@ -2,11 +2,13 @@
   max-width: 100dvw;
   margin: 0 auto;
   padding: 20px;
-  background-image: url('https://miro.medium.com/v2/resize:fit:1100/format:webp/1*6Jp3vJWe7VFlFHZ9WhSJng.jpeg');
+  background-image: url('../public/library.jpg');
   background-position: center;
-  background-repeat: repeat;
+  background-repeat: no-repeat;
+  background-size: cover; /* This will make the background image cover the entire container */
   min-height: 100vh;
 }
+
 
 .library-container {
   margin: 20px;
