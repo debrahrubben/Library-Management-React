@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS library (
+    id SERIAL PRIMARY KEY,
+    borrower VARCHAR(255) NOT NULL,
+    mobile_number VARCHAR(255) NOT NULL,
+    book_title VARCHAR(255) NOT NULL,
+    due_date DATE NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS logs (
+    id SERIAL PRIMARY KEY,
+    personId VARCHAR(255) NOT NULL,
+    person_name VARCHAR(255) NOT NULL,
+    entry_time TIMESTAMP NOT NULL,
+    exit_time TIMESTAMP
+);
